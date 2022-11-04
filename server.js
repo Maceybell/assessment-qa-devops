@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const {bots, playerRecord} = require('./data')
 const {shuffleArray} = require('./utils')
+require('dotenv').config()
 
 app.use(express.json())
 
@@ -24,9 +25,11 @@ app.get("/styles",css)
 app.get("/js", js )
 
 app.get('/api/robots', (req, res) => {
+    
     try {
         res.status(200).send(botsArr)
     } catch (error) {
+        rollbar.error('All bots could not be fetched')
         console.log('ERROR GETTING BOTS', error)
         res.sendStatus(400)
     }
@@ -41,6 +44,7 @@ app.get('/api/robots/five', (req, res) => {
         let compDuo = shuffled.slice(6, 8)
         res.status(200).send({choices, compDuo})
     } catch (error) {
+        rollbar.critical('No bot choices loading: app broken')
         console.log('ERROR GETTING FIVE BOTS', error)
         res.sendStatus(400)
     }
@@ -72,6 +76,7 @@ app.post('/api/duel', (req, res) => {
             res.status(200).send('You won!')
         }
     } catch (error) {
+        rollbar.warning('duel failed, app broken?')
         console.log('ERROR DUELING', error)
         res.sendStatus(400)
     }
