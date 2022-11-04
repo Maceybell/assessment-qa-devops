@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const {bots, playerRecord} = require('./data')
 const {shuffleArray} = require('./utils')
-require('dotenv').config()
+
 
 app.use(express.json())
 
